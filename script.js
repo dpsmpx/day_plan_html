@@ -2,10 +2,11 @@
 Что есть:
 1. Генерация фиксированного плана дня
 2. Автоформатирование
+3. Масштабирование под экран
+4. Выделение текущей строки
 
 Что осталось сделать:
-1. Масштабирование под экран
-2. Выделение текущей строки
+1. Убрать избыточные переменные, использовать одинаковые для разных случаев
 */
 
 // Общие функции
@@ -101,9 +102,9 @@ function currentTimeInMinutes() {
 
 function get_time(string) {
   try {
-    return Number(string[0]+string[1]) + Number(string[3]+string[4]) * 60;
+    return Number(string[0]+string[1]) * 60 + Number(string[3]+string[4]);
   } catch {
-    return 0;
+    return 24 * 60;
   }
 }
 
@@ -113,6 +114,7 @@ let b_plan = document.getElementById('plan');
 let b_tasks = document.getElementById('tasks');
 let b_links = document.getElementById('links');
 let b_edit = document.getElementById('edit');
+let b_info = document.getElementById('info');
 
 // Действия по событию
 b_copy.onclick = copy_func
@@ -127,36 +129,7 @@ if (day > 6) {
 }
 let monthDay = date.getDate()
 
-if (day == 0) {
-  tasks.push("1. Разминка");
-  tasks.push("2. 4x25 приседания");
-  tasks.push("3. 4x10 отжимания");
-  tasks.push("4. Растяжка");
-}
-if (day == 2) {
-  tasks.push("1. Разминка");
-  tasks.push("2. 4x5 подтягивания");
-  tasks.push("3. 4x5m эспандер");
-  tasks.push("4. Растяжка");
-}
-if (day == 4) {
-  tasks.push("1. Разминка");
-  tasks.push("2. 4x5m бег");
-  tasks.push("3. 4x");
-  tasks.push("4. Растяжка");
-}
-if (day == 6) {
-  tasks.push("1. Разминка");
-  tasks.push("2. 4x10m слепая печать");
-  tasks.push("3. 4x10m программирование python");
-  tasks.push("4. Растяжка");
-}
-if (monthDay == 1) {
-  tasks.push("Пополнить кредитку");
-  tasks.push("Составить план на месяц");
-}
-
-training = [
+let training = [
   "<a href='https://youtu.be/9UlvDqGHvNE'>мгновенная эволюция</a>",
   "<a href='https://monkeytype.com/'>слепая печать</a>",
   "<a href='https://schultetable.ru/training/en/'>шульте</a>",
@@ -166,7 +139,36 @@ training = [
   "порядок(файлы, блокноты)"
 ]
 
-tasks = [
+let body_training = "";
+if (day == 0) {
+  body_training += "<br>";
+  body_training += "  1. 4x25 приседания<br>";
+  body_training += "  2. 4x10 отжимания";
+
+}
+if (day == 2) {
+  body_training += "<br>";
+  body_training += "  1. 4x5 подтягивания<br>";
+  body_training += "  2. 4x5m эспандер";
+
+}
+if (day == 4) {
+  body_training += "<br>";
+  body_training += "  1. 4x5m бег<br>";
+  body_training += "  2. 4x20 пресс";
+}
+if (day == 6) {
+  body_training += "<br>";
+  body_training += "  1. 4x10m слепая печать<br>";
+  body_training += "  2. 4x10m программирование python";
+}
+if (body_training == "") {
+  body_training = "чтение";
+} else {
+  body_training = " "+body_training;
+}
+
+let tasks = [
   "Делать диплом",
   "Установить vim на windows",
   "Установить vim на linux",
@@ -184,7 +186,7 @@ tasks_for_day += "<tr>";
 tasks_for_day += "<td>";
 tasks_for_day += "<pre>";
 for (let i = 0; i < tasks.length; i++) {
-  tasks_for_day += i+1 + ". " + tasks[i];
+  tasks_for_day += (i+1) + ". " + tasks[i];
   if (i < tasks.length) {
     tasks_for_day += "<br>";
   }
@@ -196,77 +198,77 @@ tasks_for_day += "</table>";
 tasks_for_day += "</div>";
 tasks_for_day += "</div>";
 
-
-
-
-
-
-let time = 0;
-function currentTimeInMinutes2() {
-  return time;
+if (monthDay == 1) {
+  tasks.push("Пополнить кредитку");
+  tasks.push("Составить план на месяц");
 }
-
-
-
-
 
 function show_plan() {
   clean_plan = [
-  "05:00 :",
-  "  1. зубы",
-  "  2. рот",
+  "05:00 :<br>" +
+  "  1. зубы<br>" +
+  "  2. рот<br>" +
   "  3. холодный душ",
-  "  4. 100 приседаний",
-  "  5. 40 отжиманий",
-  "06:00 :",
-  "  1. приготовить завтрак",
-  "  2. поесть",
+  
+  "06:00 :<br>" +
+  "  1. приготовить завтрак<br>" +
+  "  2. поесть<br>" +
   "  3. помыть посуду",
-  "07:00 :",
-  "  1. " + training[day],
-  "  2. <a href='https://www.duolingo.com/learn'>duolingo</a>",
-  "08:00 :",
-  "  1. изучить " + tasks_for_day,
+  
+  "07:00 :<br>" +
+  "  1. " + training[day] + "<br>" +
+  "  2. <a href='https://www.duolingo.com/learn'>duolingo</a><br>" +
+  "  3. Stimuler",
+  
+  "08:00 :<br>" +
+  "  1. изучить " + tasks_for_day + "<br>" +
   "  2. начать работу",
-  "12:00 :",
-  "  1. приготовить обед",
-  "  2. поесть",
+  
+  "12:00 :<br>" +
+  "  1. приготовить обед<br>" +
+  "  2. поесть<br>" +
   "  3. помыть посуду",
-  "13:00 - продолжить работу",
-  "17:00 :",
-  "  1. приготовить ужин",
-  "  2. поесть",
+  
+  "13:00 : продолжить работу",
+  
+  "17:00 :<br>" +
+  "  1. приготовить ужин<br>" +
+  "  2. поесть<br>" +
   "  3. помыть посуду",
-  "18:00 - тренировка/чтение",
-  "19:00 - доделать то что утром не успел",
-  "20:00 :",
-  "  1. оценить ситуацию",
-  "  2. составить планы на будущее",
-  "  3. подготовить ресурсы",
+  
+  "18:00 : " + body_training,// - тренировка/чтение",
+  
+  "19:00 : доделать то что утром не успел",
+  
+  "20:00 :<br>" +
+  "  1. оценить ситуацию<br>" +
+  "  2. составить планы на будущее<br>" +
+  "  3. подготовить ресурсы<br>" +
   "  4. обновить данный план",
-  "21:00+:",
-  "  1. стирка",
-  "  2. уборка",
-  "  3. порядок в пространстве",
-  "  4. мантра медитация",
+  
+  "21:00+:<br>" +
+  "  1. стирка<br>" +
+  "  2. уборка<br>" +
+  "  3. порядок в пространстве<br>" +
+  "  4. мантра медитация<br>" +
   "  5. сон"
   ]
-  
+  let pos = 0;
   for (let i = 0; i < clean_plan.length; i++) {
-    if (get_time(clean_plan[i]) >= currentTimeInMinutes2()) {
-      clean_plan[i] = "<p style='background=#000'>"+clean_plan[i]+"</p>";
-      //break;
+    if (get_time(clean_plan[i]) <= currentTimeInMinutes()) {
+      pos = i;
+      continue;
+    } else {
+      break;
     }
   }
+  clean_plan[pos] = "<b>"+clean_plan[pos]+"</b>";
   
-  plan = "<pre>";
+  let plan = "";
   for (let i = 0; i < clean_plan.length; i++) {
     plan += clean_plan[i] + "<br>";
   }
-  b_plan.innerHTML = plan + "</pre>";
-  
-  console.log(time);
-  time += 60;
+  b_plan.innerHTML = plan;
 }
 show_plan();
 
@@ -327,7 +329,35 @@ links_to_show += "</div>";
 links_to_show += "</div>";
 b_edit.innerHTML = links_to_show;
 
-setInterval(show_plan, 1000);
+links = [
+  "25/5",
+  "Ум/Тело",
+  "Тело/Ум",
+  "120/15",
+  "Сон/Медитация",
+];
+
+links_to_show = "";
+links_to_show += "<div class='dropdown'>";
+links_to_show += "<button>Правила</button>";
+links_to_show += "<div class='dropdown-content'>";
+links_to_show += "<table>";
+links_to_show += "<tr>";
+links_to_show += "<td>";
+links_to_show += "<pre>";
+for (let i = 0; i < links.length; i++) {
+  links_to_show += links[i];
+  if (i < links.length) {
+    links_to_show += "<br>";
+  }
+}
+links_to_show += "</pre>";
+links_to_show += "</td>";
+links_to_show += "</tr>";
+links_to_show += "</table>";
+links_to_show += "</div>";
+links_to_show += "</div>";
+b_info.innerHTML = links_to_show;
 
 
 
