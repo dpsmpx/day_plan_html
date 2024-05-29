@@ -45,18 +45,20 @@ h4,
 h5,
 h6 {
     margin: auto;
-    padding: auto;
 }
 
-p {
+pre, p {
     display: block;
     margin: 0px;
     padding: 0px;
+    background: #fff;
+    color: #000;
 }
 
-pre {
-    margin: 0px;
-    padding: 0px;
+b {
+  background: #000;
+  color: #fff;
+  font-weight: 500;
 }
 
 .dropdown {
